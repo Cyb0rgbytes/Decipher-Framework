@@ -1,7 +1,6 @@
 import sys
 import base64
 
-
 def welcome():
     print(f'{Fore.WHITE}\nWelcome to Decipher.py {Fore.RED}')
     
