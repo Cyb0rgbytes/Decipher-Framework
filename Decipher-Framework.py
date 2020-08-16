@@ -25,16 +25,20 @@ def operation():
     ########################################
     # Base64
 def operation_base64():
-    if operation == '1': operation_base64()
-        print(f'''{Fore.RED}Do You want to Encrypt or Decrypt?
-        E for Encrypt
-        D for Decrypt''')
-        operation_base64 = input('Operation: ')
+    print(f'''{Fore.RED}Do You want to Encrypt or Decrypt?
+    E for Encrypt
+    D for Decrypt''')
+    operation_base64_input = input('Operation: ')
 
-        operation_base64_options = ['E', 'e', 'D', 'd']
-    if  operation_base64 not in operation_base64_options:
+    operation_base64_options = ['E', 'e', 'D', 'd']
+    if operation_base64_input not in operation_base64_options:
         print (f'\n{Fore.WHITE} Please Enter a letter from the list!')
 
+    if  ('E' or 'e') in operation_base64_input:
+        print('Please enter the string you would like Base64 encoded')
+        b64_input = input('String: ')
+        encoded_string = b64_input.encode()
+        print(encoded_string)
 
         operation_base64()
     operation()
