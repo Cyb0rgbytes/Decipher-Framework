@@ -28,13 +28,13 @@ def operation_base64():
     print(f'''{Fore.RED}Do You want to Encrypt or Decrypt?
     E for Encrypt
     D for Decrypt''')
-    operation_base64_input = input('Operation: ')
+    operation_base64_input = input('Operation: ').lower()
 
-    operation_base64_options = ['E', 'e', 'D', 'd']
+    operation_base64_options = ['e', 'd']
     if operation_base64_input not in operation_base64_options:
         print (f'\n{Fore.WHITE} Please Enter a letter from the list!')
 
-    if  ('E' or 'e') in operation_base64_input:
+    else:
         print('Please enter the string you would like Base64 encoded')
         b64_input = input('String: ')
         encoded_string = b64_input.encode()
@@ -43,4 +43,3 @@ def operation_base64():
         operation_base64()
     operation()
 welcome()
-
