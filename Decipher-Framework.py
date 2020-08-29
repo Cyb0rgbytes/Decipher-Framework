@@ -6,7 +6,6 @@ from colorama import Fore, Back
 
 def welcome():
     print(f'{Fore.WHITE}\nWelcome to Decipher Framework {Fore.RED} Follow the instructions to navigate the script')
-    decipher()
 
 
 def decipher():
@@ -14,13 +13,15 @@ def decipher():
     Please select the cipher you want to use
     1 for Base64
     2 for Caesar Cipher
-    3 for ROT13''')
+    3 for ROT13
+    4 to Exit''')
     operation = input('Operation: ')
 
-    operation_options = ['1', '2', '3']
+    operation_options = ['1', '2', '3', '4']
     if operation not in operation_options:
         print(f'\n{Fore.WHITE} Please Enter a Number from the List!')
-    decipher_base64()
+    else:
+        return operation
 
     ########################################
     # Base64
@@ -48,26 +49,27 @@ def decipher_base64():
     # ROT13
 
 
-# def Decipher_rot13():
+def decipher_rot13():
+    print("WIP")
 
-# def decipher_caesar():
+def decipher_caesar():
+    print("WIP")
 
 
 def main():
-    while True:
+    quit = 0
+    while quit == 0:
         user_answer = decipher()
-        if user_answer == 1:
+        if user_answer == '1':
             decipher_base64()
-        elif user_answer == 2:
+        elif user_answer == '2':
             decipher_caesar()
-        elif user_answer == 3:
+        elif user_answer == '3':
             decipher_rot13()
-        elif user_answer == "Exit":
-            return
+        elif user_answer == '4':
+            quit = 1
 
 
 if __name__ == "__main__":
     welcome()
     main()
-    decipher_base64()
-    decipher()
