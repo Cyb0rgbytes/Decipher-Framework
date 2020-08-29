@@ -37,7 +37,7 @@ def operation_base64():
     else:
         print('Please enter the string you would like Base64 encoded')
         b64_input = input('String: ')
-        encoded_string = b64_input.encode()
+        encoded_string = base64.b64encode(b64_input.encode()).decode()
         print(encoded_string)
 
         operation_base64()
