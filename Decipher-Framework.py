@@ -1,15 +1,15 @@
 #!/usr/bin/env python3 
 
-import colorama
-from colorama import init, Fore
 import base64
+from colorama import Fore, Back
 
 
 def welcome():
     print(f'{Fore.WHITE}\nWelcome to Decipher Framework {Fore.RED} Follow the instructions to navigate the script')
-    operation()
+    decipher()
 
-def operation():
+
+def decipher():
     print(f'''{Fore.RED}
     Please select the cipher you want to use
     1 for Base64
@@ -19,27 +19,55 @@ def operation():
 
     operation_options = ['1', '2', '3']
     if operation not in operation_options:
-        print (f'\n{Fore.WHITE} Please Enter a Number from the List!')
-    operation_base64()
+        print(f'\n{Fore.WHITE} Please Enter a Number from the List!')
+    decipher_base64()
 
     ########################################
     # Base64
-def operation_base64():
+
+
+def decipher_base64():
+    options = ['e', 'd']
     print(f'''{Fore.RED}Do You want to Encrypt or Decrypt?
-    E for Encrypt
-    D for Decrypt''')
-    operation_base64_input = input('Operation: ').lower()
-
-    operation_base64_options = ['e', 'd']
-    if operation_base64_input not in operation_base64_options:
-        print (f'\n{Fore.WHITE} Please Enter a letter from the list!')
-
+  E for Encrypt
+  D for Decrypt''')
+    user_input = input('Operation: ').lower()
+    if user_input in options:
+        if user_input == 'e':
+            print('Please enter the string you would like Base64 encoded')
+            string_input = input('String: ')
+            print(f'\n{Fore.WHITE}our Ecrypted Text >>> {base64.b64encode(string_input.encode()).decode()}')
+        elif user_input == 'd':
+            print('Please enter the string you would like Base64 decoded')
+            string_input = input('String: ')
+            print(f'\n{Fore.WHITE}Your Decrypted Text >>> {base64.b64decode(string_input.encode()).decode()}')
     else:
-        print('Please enter the string you would like Base64 encoded')
-        b64_input = input('String: ')
-        encoded_string = base64.b64encode(b64_input.encode()).decode()
-        print(encoded_string)
+        print(f'\n{Fore.WHITE} Please Enter a letter from the list!')
 
-        operation_base64()
-    operation()
-welcome()
+    ###########################################
+    # ROT13
+
+
+# def Decipher_rot13():
+
+# def decipher_caesar():
+
+
+def main():
+    while True:
+        user_answer = decipher()
+        if user_answer == 1:
+            decipher_base64()
+        elif user_answer == 2:
+            decipher_caesar()
+        elif user_answer == 3:
+            decipher_rot13()
+        elif user_answer == "Exit":
+            return
+
+
+if __name__ == "__main__":
+    welcome()
+    main()
+    decipher_base64()
+    decipher()
