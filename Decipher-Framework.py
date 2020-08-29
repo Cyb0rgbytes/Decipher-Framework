@@ -13,11 +13,10 @@ def decipher():
     Please select the cipher you want to use
     1 for Base64
     2 for Caesar Cipher
-    3 for ROT13
-    4 to Exit''')
+    3 to Exit''')
     operation = input('Operation: ')
 
-    operation_options = ['1', '2', '3', '4']
+    operation_options = ['1', '2', '3']
     if operation not in operation_options:
         print(f'\n{Fore.WHITE} Please Enter a Number from the List!')
     else:
@@ -48,10 +47,6 @@ def decipher_base64():
     ###########################################
     # ROT13
 
-
-def decipher_rot13():
-    print("WIP")
-
 def decipher_caesar():
     print("WIP")
 
@@ -65,8 +60,6 @@ def main():
         elif user_answer == '2':
             decipher_caesar()
         elif user_answer == '3':
-            decipher_rot13()
-        elif user_answer == '4':
             quit = 1
 
 
