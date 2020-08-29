@@ -69,8 +69,12 @@ def decipher_base64():
             print(f'\n{Fore.WHITE}Your Ecrypted Text >>> {encoded_string}')
             write_file(file_path, encoded_string)
         elif user_input == 'e':
+            print('Please enter the string you would like Base64 Encoded!')
+            string_input = input('String: ')
             print(f'\n{Fore.WHITE}Your Ecrypted Text >>> {base64.b64encode(string_input.encode()).decode()}')
         elif user_input == 'd':
+            print('Please enter the string you would like Base64 Decoded!')
+            string_input = input('String: ')
             print(f'\n{Fore.WHITE}Your Decrypted Text >>> {base64.b64decode(string_input.encode()).decode()}')
     else:
         print(f'\n{Fore.WHITE} Please Enter a letter from the list!')
