@@ -1,105 +1,169 @@
-#!/usr/bin/env python3 
-
+#!/usr/bin/env python3
 import base64
-from colorama import Fore, Back
+import codecs
+from rich.console import Console
+from rich.panel import Panel
+from rich.prompt import Prompt, IntPrompt
+from rich.table import Table
 
+console = Console()
 
-def welcome():
-    print(f'{Fore.WHITE}\nWelcome to Decipher Framework {Fore.RED} Follow the instructions to navigate the script')
+# ------------------------------
+# Cipher Functions
+# ------------------------------
 
-def read_file(file_path):
-    with open(file_path, 'r') as f:
-        content = f.read()
-    return content
+def caesar_cipher(text: str, shift: int) -> str:
+    result = ""
+    for char in text:
+        if char.isalpha():
+            offset = ord('a') if char.islower() else ord('A')
+            # Shift within the alphabet
+            result += chr((ord(char) - offset + shift) % 26 + offset)
+        else:
+            result += char
+    return result
 
-def write_file(file_path, content):
-    with open(file_path, 'w') as f:
-        f.write(content)
+def vigenere_cipher(text: str, key: str, mode: str = "encode") -> str:
+    result = ""
+    key = key.lower()
+    key_length = len(key)
+    key_index = 0
+    for char in text:
+        if char.isalpha():
+            offset = ord('a') if char.islower() else ord('A')
+            # Calculate shift from key letter
+            k = ord(key[key_index % key_length]) - ord('a')
+            if mode == "decode":
+                k = -k
+            result += chr((ord(char) - offset + k) % 26 + offset)
+            key_index += 1
+        else:
+            result += char
+    return result
 
-def decipher():
-    print(f'''{Fore.RED}
-    Please select the cipher you want to use
-    1 for Base64
-    2 for Caesar Cipher
-    3 for ROT13
-    4 to Exit''')
-    operation = input('Operation: ')
+def base64_encode(text: str) -> str:
+    encoded_bytes = base64.b64encode(text.encode())
+    return encoded_bytes.decode()
 
-    operation_options = ['1', '2', '3', '4']
-    if operation not in operation_options:
-        print(f'\n{Fore.WHITE} Please Enter a Number from the List!')
-    else:
-        return operation
+def base64_decode(text: str) -> str:
+    try:
+        decoded_bytes = base64.b64decode(text.encode())
+        return decoded_bytes.decode()
+    except Exception as e:
+        return f"Error decoding Base64: {e}"
 
-    ########################################
-    # Base64
+# Morse Code mappings
+MORSE_CODE_DICT = {
+    'A': '.-',    'B': '-...',  'C': '-.-.', 
+    'D': '-..',   'E': '.',     'F': '..-.',
+    'G': '--.',   'H': '....',  'I': '..',
+    'J': '.---',  'K': '-.-',   'L': '.-..',
+    'M': '--',    'N': '-.',    'O': '---',
+    'P': '.--.',  'Q': '--.-',  'R': '.-.',
+    'S': '...',   'T': '-',     'U': '..-',
+    'V': '...-',  'W': '.--',   'X': '-..-',
+    'Y': '-.--',  'Z': '--..',
+    '1': '.----', '2': '..---', '3': '...--',
+    '4': '....-', '5': '.....', '6': '-....',
+    '7': '--...', '8': '---..', '9': '----.',
+    '0': '-----', ' ': '/'
+}
 
+def morse_encode(text: str) -> str:
+    result = []
+    for char in text.upper():
+        if char in MORSE_CODE_DICT:
+            result.append(MORSE_CODE_DICT[char])
+        else:
+            result.append(char)
+    return " ".join(result)
 
-def decipher_base64():
-    options = ['e', 'd']
-    print(f'''{Fore.RED}Do You want to Encrypt or Decrypt?
-  E for Encrypt
-  D for Decrypt''')
-    user_input = input('Operation: ').lower()
+def morse_decode(morse: str) -> str:
+    # Build reverse mapping
+    reverse_morse = {v: k for k, v in MORSE_CODE_DICT.items()}
+    words = morse.split(" / ")
+    decoded_words = []
+    for word in words:
+        letters = word.split()
+        decoded_word = "".join(reverse_morse.get(letter, letter) for letter in letters)
+        decoded_words.append(decoded_word)
+    return " ".join(decoded_words)
 
-    if user_input == 'e':
-        print(f'''{Fore.RED}Do you want to encrypt a file?
-        Y for Yes
-        N for Decrypting or encrypting on terminal''')
-    else:
-        print(f'''{Fore.RED}Do you want to decrypt a file?
-        Y for Yes
-        N for Decrypting or encrypting on terminal''')
-    file_choice = input('Operation: ').lower()
+# ------------------------------
+# Interface Functions
+# ------------------------------
 
-    if file_choice == 'y':
-        file_path = input("What is the path of the file? ")
-        file_content = read_file(file_path)
-    else:
-        print('Please enter the string you would like Base64 encoded')
-        string_input = input('String: ')
-
-    if user_input in options:
-        if user_input == 'e' and file_choice == 'y':
-            encoded_string = base64.b64encode(file_content.encode()).decode()
-            print(f'\n{Fore.WHITE}Your Ecrypted Text >>> {encoded_string}')
-            write_file(file_path, encoded_string)
-        elif user_input == 'd' and file_choice == 'y':
-            encoded_string = base64.b64decode(file_content.encode()).decode()
-            print(f'\n{Fore.WHITE}Your Ecrypted Text >>> {encoded_string}')
-            write_file(file_path, encoded_string)
-        elif user_input == 'e':
-            print(f'\n{Fore.WHITE}Your Ecrypted Text >>> {base64.b64encode(string_input.encode()).decode()}')
-        elif user_input == 'd':
-            print(f'\n{Fore.WHITE}Your Decrypted Text >>> {base64.b64decode(string_input.encode()).decode()}')
-    else:
-        print(f'\n{Fore.WHITE} Please Enter a letter from the list!')
-
-    ###########################################
-    # ROT13
-
-
-def decipher_rot13():
-    print("WIP")
-
-def decipher_caesar():
-    print("WIP")
-
+def display_menu():
+    table = Table(title="Decipher Framework Menu", style="cyan", show_lines=True)
+    table.add_column("Option", style="magenta", justify="center")
+    table.add_column("Cipher/Algorithm", style="green")
+    table.add_row("1", "Caesar Cipher")
+    table.add_row("2", "ROT13")
+    table.add_row("3", "Vigenère Cipher")
+    table.add_row("4", "Base64 Encode/Decode")
+    table.add_row("5", "Morse Code")
+    table.add_row("0", "Exit")
+    console.print(table)
 
 def main():
-    quit = 0
-    while quit == 0:
-        user_answer = decipher()
-        if user_answer == '1':
-            decipher_base64()
-        elif user_answer == '2':
-            decipher_caesar()
-        elif user_answer == '3':
-            decipher_rot13()
-        elif user_answer == '4':
-            quit = 1
+    console.print(
+        Panel(
+            "[bold cyan]Welcome to Decipher Framework Made by : Cyb0rgBytes! [/bold cyan]\nA Terminal-based Cryptography Utility for Hackers & Crypto Enthusiasts",
+            title="Decipher Framework",
+            style="bold green"
+        )
+    )
+    
+    while True:
+        display_menu()
+        choice = Prompt.ask("Enter your choice", choices=["0", "1", "2", "3", "4", "5"], default="0")
+        
+        if choice == "0":
+            console.print("Exiting... Goodbye!", style="bold red")
+            break
+        
+        elif choice == "1":  # Caesar Cipher
+            mode = Prompt.ask("Select mode", choices=["encode", "decode"], default="encode")
+            text = Prompt.ask("Enter text")
+            shift = IntPrompt.ask("Enter shift value (e.g., 3)")
+            # For decoding, reverse the shift
+            if mode == "decode":
+                shift = -shift
+            result = caesar_cipher(text, shift)
+            console.print(Panel(f"[bold yellow]Result:[/bold yellow]\n{result}", style="blue"))
+        
+        elif choice == "2":  # ROT13
+            text = Prompt.ask("Enter text for ROT13")
+            result = codecs.encode(text, 'rot_13')
+            console.print(Panel(f"[bold yellow]Result:[/bold yellow]\n{result}", style="blue"))
+        
+        elif choice == "3":  # Vigenère Cipher
+            mode = Prompt.ask("Select mode", choices=["encode", "decode"], default="encode")
+            text = Prompt.ask("Enter text")
+            key = Prompt.ask("Enter key")
+            result = vigenere_cipher(text, key, mode)
+            console.print(Panel(f"[bold yellow]Result:[/bold yellow]\n{result}", style="blue"))
+        
+        elif choice == "4":  # Base64
+            mode = Prompt.ask("Select mode", choices=["encode", "decode"], default="encode")
+            text = Prompt.ask("Enter text")
+            if mode == "encode":
+                result = base64_encode(text)
+            else:
+                result = base64_decode(text)
+            console.print(Panel(f"[bold yellow]Result:[/bold yellow]\n{result}", style="blue"))
+        
+        elif choice == "5":  # Morse Code
+            mode = Prompt.ask("Select mode", choices=["encode", "decode"], default="encode")
+            if mode == "encode":
+                text = Prompt.ask("Enter text to convert to Morse Code")
+                result = morse_encode(text)
+            else:
+                text = Prompt.ask("Enter Morse Code (use '/' for space between words)")
+                result = morse_decode(text)
+            console.print(Panel(f"[bold yellow]Result:[/bold yellow]\n{result}", style="blue"))
+        
+        console.print("\n")
 
-
-if __name__ == "__main__":
-    welcome()
+if __name__ == '__main__':
     main()
