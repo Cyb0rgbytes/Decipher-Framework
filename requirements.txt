@@ -1,0 +1,33 @@
+
+# requirements.txt
+
+```txt
+# 🚀 DECIPHER FRAMEWORK v2.0 - CYBERPUNK EDITION
+# Cryptographic Toolkit Requirements
+
+# Core Framework
+rich>=13.0.0                    # Beautiful terminal output with colors, tables, panels
+
+# Optional Dependencies (Uncomment if needed)
+# cryptography>=41.0.0          # For future AES/RSA implementation
+# numpy>=1.24.0                 # For mathematical operations in advanced ciphers
+# scipy>=1.10.0                 # For statistical analysis in cryptanalysis
+# pandas>=2.0.0                 # For data analysis and frequency tables
+# matplotlib>=3.7.0             # For visualization of frequency analysis
+
+# Development Dependencies
+# pytest>=7.0.0                 # For testing
+# black>=23.0.0                 # Code formatting
+# flake8>=6.0.0                 # Linting
+# mypy>=1.0.0                   # Type checking
+
+# Platform Specific
+# pyfiglet>=0.8.post1           # Alternative ASCII art generation (optional)
+
+# Performance
+# numba>=0.57.0                 # JIT compilation for performance-critical functions
+
+# Security
+# pycryptodome>=3.18.0          # Additional cryptographic algorithms
+
+# Note: All standard library modules (base64, codecs, math, etc.) are included in Python
